@@ -18,8 +18,7 @@ app.post("/", function (req, res) {
   const fName = req.body.fName;
   const lName = req.body.lName;
   const email = req.body.email;
-  res.send(" " + fName);
-
+ 
   const data = {
     members: [
       {
@@ -45,14 +44,28 @@ app.post("/", function (req, res) {
   };
 
   const request = https.request(url, options, function (response) {
+
+     if(response.statusCode === 200){
+
+        res.sendFile(__dirname+"/success.html");
+
+     }
+     else{
+        res.sendFile(__dirname+"/failure.html");
+     }
+
     response.on("data", function (data) {
       console.log(JSON.parse(data));
     });
   });
 
-  request.write(jsonData);
+  //request.write(jsonData);
   request.end();
 });
+
+app.post("/failure", function(req, res){
+    res.redirect("/");
+})
 
 app.listen(3000, function (req, res) {
   console.log("Server started at port 3000");
